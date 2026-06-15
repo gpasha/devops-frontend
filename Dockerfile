@@ -1,8 +1,8 @@
 # Stage 1: сборка React/Vite
-FROM node:24-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --include=dev
 COPY . .
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
