@@ -15,6 +15,8 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          timeout: 40s
+          command_timeout: 30m
           script: |
             cd /var/www/myapp/backend
             git pull origin main
