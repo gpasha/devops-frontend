@@ -5,11 +5,7 @@ on:
     branches: [main]
  
 jobs:
-  checks:
-    uses: ./.github/workflows/pr-checks.yml
- 
   deploy:
-    needs: checks
     runs-on: ubuntu-latest
  
     steps:
@@ -20,7 +16,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /var/www/myapp/backend
+            cd /var/www/myapp/frontend
             git pull origin main
             cd /var/www/myapp
-            docker compose up --build -d backend
+            docker compose up --build -d frontend
