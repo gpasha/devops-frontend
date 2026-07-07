@@ -23,10 +23,11 @@ jobs:
       - name: Build and Push docker image
         id: build-push
         env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
           IMAGE_SHA: ${{ vars.DOCKER_USER }}/frontend-simple:sha-${{ github.sha }}
           IMAGE_LATEST: ${{ vars.DOCKER_USER }}/frontend-simple:latest
         run: |
-          docker build -t $IMAGE_SHA -t $IMAGE_LATEST .
+          docker build --build-arg VITE_API_URL==$VITE_API_URL -t $IMAGE_SHA -t $IMAGE_LATEST .
           docker push $IMAGE_SHA
           docker push $IMAGE_LATEST
           echo "image_sha=$IMAGE_SHA" >> $GITHUB_OUTPUT
