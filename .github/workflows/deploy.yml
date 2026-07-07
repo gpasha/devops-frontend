@@ -24,4 +24,4 @@ jobs:
           script: |
             cd /var/www/myapp
             sed -i "s|FRONTEND_IMAGE=.*|FRONTEND_IMAGE=$TARGET_IMAGE|" .env
-            docker compose up -d --no-deps frontend
+            docker compose up --build -d --no-deps frontend
