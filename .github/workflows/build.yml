@@ -1,0 +1,32 @@
+name: Build
+
+on:
+  workflow_call:
+    outputs:
+      image_sha:
+        description: "The SHA of the built docker image"
+        value: ${{ jobs.build.outputs.image_sha }}
+ 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      image_sha: ${{ steps.build-push.outputs.image_sha }}
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        run: docker login -u ${{ vars.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+      
+      - name: Build and Push docker image
+        id: build-push
+        env:
+          IMAGE_SHA: ${{ vars.DOCKER_USER }}/frontend-simple:sha-${{ github.sha }}
+          IMAGE_LATEST: ${{ vars.DOCKER_USER }}/frontend-simple:latest
+        run: |
+          docker build -t $IMAGE_SHA -t $IMAGE_LATEST .
+          docker push $IMAGE_SHA
+          docker push $IMAGE_LATEST
+          echo "image_sha=$IMAGE_SHA" >> $GITHUB_OUTPUT

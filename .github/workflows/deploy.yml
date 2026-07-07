@@ -1,8 +1,11 @@
 name: Deploy
- 
+
 on:
-  push:
-    branches: [main]
+  workflow_call:
+    inputs:
+      image_sha:
+        required: true
+        type: string
  
 jobs:
   deploy:
@@ -11,12 +14,14 @@ jobs:
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          TARGET_IMAGE: ${{ inputs.image_sha }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: TARGET_IMAGE
           script: |
-            cd /var/www/myapp/frontend
-            git pull origin main
             cd /var/www/myapp
-            docker compose up --build -d frontend
+            sed -i "s|FRONTEND_IMAGE=.*|FRONTEND_IMAGE=$TARGET_IMAGE|" .env
+            docker compose up -d --no-deps frontend
