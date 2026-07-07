@@ -1,7 +1,7 @@
 function App() {
   return (
     <div>
-      <h1>Hello World! From a new VDS!!! </h1>
+      <h1>Hello from week 6!!! </h1>
     </div>
   )
 }
